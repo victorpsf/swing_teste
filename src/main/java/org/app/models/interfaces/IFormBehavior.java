@@ -2,9 +2,8 @@ package org.app.models.interfaces;
 
 import org.app.models.events.BaseActionData;
 
-public interface IFormBehavior {
+public interface IFormBehavior extends Runnable {
     void initializeComponent();
-    void run();
 
     void windowOpened(BaseActionData action);
     void windowClosing(BaseActionData action);

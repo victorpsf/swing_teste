@@ -1,6 +1,8 @@
 package org.app.components.forms;
 
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
@@ -26,6 +28,13 @@ public class AppForm extends ComponentBehavior implements IComponent {
     public UUID getId() { return this.id; }
     @Override
     public EComponentType getType() { return EComponentType.FORM; }
+    @Override
+    public Component getOriginalElement() { return this.jFrame; }
+    @Override
+    public void addChildren(IComponent children) {
+        this.jFrame.add(children.getOriginalElement());
+        this.childrens.add(children);
+    }
 
     public String getTitle() { return this.jFrame.getTitle(); }
     public AppForm setTitle(String title) {
@@ -76,17 +85,17 @@ public class AppForm extends ComponentBehavior implements IComponent {
         return this;
     }
 
+    private AppForm _changeWindowView(EWindowViewState state) {
+        if (state.equals(EWindowViewState.MAXIMIZED))
+            this.jFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        this.jFrame.setExtendedState(state.getId()); 
+        this.setWindowViewState(state);
+        return this;
+    }
+
     public AppForm changeWindowView(EWindowViewState state) {
         switch (state) {
-            case ICONIFIED -> { 
-                this.jFrame.setState(state.getId()); 
-                this.setWindowViewState(state);
-            }
-
-            case NORMAL, MAXIMIZED -> { 
-                this.jFrame.setExtendedState(state.getId()); 
-                this.setWindowViewState(state);
-            }
+            case ICONIFIED, NORMAL, MAXIMIZED -> { return this._changeWindowView(state); }
         }
 
         return this;
@@ -99,7 +108,10 @@ public class AppForm extends ComponentBehavior implements IComponent {
     public void show() {
         this.prepare();
         this.maximize();
-        SwingUtilities.invokeLater(() -> this.jFrame.setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            this.jFrame.setAlwaysOnTop(true);
+            this.jFrame.setVisible(true);
+        });
     }
 
     public void hide() {

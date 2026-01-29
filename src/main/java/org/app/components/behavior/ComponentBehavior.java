@@ -8,7 +8,7 @@ import org.app.models.enumerables.EComponentType;
 import org.app.models.enumerables.EWindowViewState;
 import org.app.models.interfaces.IComponent;
 
-public class ComponentBehavior extends ComponentSimpleBehavior {
+public abstract class ComponentBehavior extends ComponentSimpleBehavior {
     private EWindowViewState windowViewState = EWindowViewState.NORMAL;
     protected List<IComponent> childrens = new ArrayList<>();
 
@@ -20,6 +20,8 @@ public class ComponentBehavior extends ComponentSimpleBehavior {
             .filter(a-> a.getType().is(type))
             .findFirst();
     }
+
+    public abstract void addChildren(IComponent children);
 
     public EWindowViewState getWindowViewState() { return this.windowViewState; }
     public void setWindowViewState(EWindowViewState windowViewState) { this.windowViewState = windowViewState; }

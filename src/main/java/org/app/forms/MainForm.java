@@ -1,8 +1,16 @@
 package org.app.forms;
 
+import javax.swing.JPanel;
+
 import org.app.components.forms.AppForm;
+import org.app.components.panels.AppBoxPanel;
+import org.app.components.panels.AppFlowPanel;
+import org.app.components.styles.ComponentStyle;
+import org.app.constants.Colors;
 import org.app.factories.ComponentFactory;
 import org.app.models.enumerables.EActionType;
+import org.app.models.enumerables.EBoxLayout;
+import org.app.models.enumerables.EFlowLayoutAlign;
 import org.app.models.events.BaseActionData;
 import org.app.models.interfaces.IFormBehavior;
 
@@ -22,6 +30,22 @@ public class MainForm implements IFormBehavior {
         this.form.addListener(EActionType.RESTORE, this::windowDeiconified);
         this.form.addListener(EActionType.ACTIVATED, this::windowActivated);
         this.form.addListener(EActionType.DEACTIVATED, this::windowDeactivated);
+
+        AppFlowPanel panel  = ComponentFactory.createFlowPanel(EFlowLayoutAlign.CENTER, 5, 5);
+        AppFlowPanel formPanel = ComponentFactory.createFlowPanel(EFlowLayoutAlign.CENTER, 5, 5);
+
+        panel.setPreferredSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        panel.setMinimumSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        panel.setMaximumSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        panel.defineStyle(ComponentStyle.empty().colors(Colors.WHITE, Colors.GRAY_800));
+
+        formPanel.setMinimumSize(600, 300);
+        formPanel.setMaximumSize(600, 600);
+        formPanel.defineStyle(ComponentStyle.empty().colors(Colors.BLACK, Colors.WHITE));
+
+        panel.addChildren(formPanel);
+
+        this.form.addChildren(panel);
     }
 
     @Override
@@ -54,7 +78,7 @@ public class MainForm implements IFormBehavior {
 
     @Override
     public void run() {
-        throw new RuntimeException("falha de teste");
-        // this.form.show();
+        this.initializeComponent();
+        this.form.show();
     }
 }
